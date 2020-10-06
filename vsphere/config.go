@@ -3,6 +3,7 @@ package vsphere
 import (
 	"context"
 	"crypto/sha1"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -25,6 +26,8 @@ import (
 	"github.com/vmware/govmomi/vim25/debug"
 	"github.com/vmware/govmomi/vim25/soap"
 	"github.com/vmware/govmomi/vim25/types"
+	"gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/runtime"
+	"gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/cis"
 )
 
 // VSphereClient is the client connection manager for the vSphere provider. It
@@ -40,6 +43,9 @@ type VSphereClient struct {
 
 	// The REST client used for tags and content library.
 	restClient *rest.Client
+
+	// API client for endpoints with /api URI
+	apiClient *APISessionClient
 }
 
 // TagsManager returns the embedded tags manager used for tags, after determining
@@ -567,4 +573,44 @@ func (c *Config) LoadAndVerifyRestSession(client *govmomi.Client) (*rest.Client,
 		return restClient, false, nil
 	}
 
+}
+
+type APISessionClient struct {
+	ApiClient    *cis.APIClient
+	SessionId    string
+	BasePath     string
+	InsecureFlag bool
+}
+
+func (c *Config) ApiSessionClient() (*APISessionClient, error) {
+	cfg := runtime.NewConfiguration()
+
+	cfg.BasePath = "https://" + c.VSphereServer
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: c.InsecureFlag},
+	}
+	cfg.HTTPClient = &http.Client{Transport: tr}
+	ctx := context.WithValue(context.Background(), runtime.ContextBasicAuth, runtime.BasicAuth{
+		UserName: c.User,
+		Password: c.Password,
+	})
+
+	apiClient := cis.NewAPIClient(cfg)
+	sessionCreateResponseBody, _, err := apiClient.SessionApi.Create(ctx, "vmware-api-session-id")
+
+	if err != nil {
+		log.Printf("[DEBUG] %s:", err)
+
+	} else {
+		log.Printf("[DEBUG] CIS session ID is : %s", sessionCreateResponseBody.Value)
+	}
+
+	apiSessionClient := &APISessionClient{
+		// TODO - remove apiClient if not required for other cis apis like session, task management
+		ApiClient:    apiClient,
+		SessionId:    sessionCreateResponseBody.Value,
+		BasePath:     cfg.BasePath,
+		InsecureFlag: c.InsecureFlag,
+	}
+	return apiSessionClient, nil
 }
