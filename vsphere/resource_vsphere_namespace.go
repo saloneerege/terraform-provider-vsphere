@@ -12,8 +12,6 @@ import (
 	"gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/vcenter/namespaces"
 )
 
-const SessionID = "a94baa2136dc689f2216e2c02d7539e2"
-
 var accessRoleAllowedValues = []string{
 	string(namespaces.NAMESPACESACCESSROLE_EDIT),
 	string(namespaces.NAMESPACESACCESSROLE_VIEW),
@@ -109,12 +107,9 @@ func resourceVsphereNamespace() *schema.Resource {
 }
 
 func resourceVsphereNamespaceCreate(d *schema.ResourceData, meta interface{}) error {
-	//APIClient := meta.(*VSphereClient).apiClient
+	APIClient := meta.(*VSphereClient).apiClient
+	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 
-	BasePath := ""
-	InsecureFlag := true
-
-	namespaceConfig := GetNamespaceConfig(SessionID, BasePath, InsecureFlag)
 	nameSpace := d.Get("namespace").(string)
 	clusterID := d.Get("cluster").(string)
 	description := d.Get("description").(string)
@@ -122,7 +117,7 @@ func resourceVsphereNamespaceCreate(d *schema.ResourceData, meta interface{}) er
 	storageSpecsList := flattenStorageSpecifications(d.Get("storage_specifications").([]interface{}))
 
 	ctx := context.WithValue(context.Background(), runtime.ContextAPIKey, runtime.APIKey{
-		Key:    SessionID,
+		Key:    APIClient.SessionID,
 		Prefix: "",
 	})
 
@@ -139,27 +134,15 @@ func resourceVsphereNamespaceCreate(d *schema.ResourceData, meta interface{}) er
 	return resourceVsphereNamespaceRead(d, meta)
 }
 
-func GetNamespaceConfig(sessionID string, basePath string, insecureFlag bool) *runtime.Configuration {
-	cfg := runtime.NewConfiguration()
-	cfg.BasePath = basePath
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureFlag},
-	}
-	cfg.HTTPClient = &http.Client{Transport: tr}
-	cfg.AddDefaultHeader("vmware-api-session-id", sessionID)
-	return cfg
-}
-
 func resourceVsphereNamespaceRead(d *schema.ResourceData, meta interface{}) error {
 
-	BasePath := ""
-	InsecureFlag := true
+	APIClient := meta.(*VSphereClient).apiClient
+	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 
-	namespaceConfig := GetNamespaceConfig(SessionID, BasePath, InsecureFlag)
 	nameSpace := d.Get("namespace").(string)
 
 	ctx := context.WithValue(context.Background(), runtime.ContextAPIKey, runtime.APIKey{
-		Key:    SessionID,
+		Key:    APIClient.SessionID,
 		Prefix: "",
 	})
 
@@ -177,15 +160,14 @@ func resourceVsphereNamespaceRead(d *schema.ResourceData, meta interface{}) erro
 }
 
 func resourceVsphereNamespaceUpdate(d *schema.ResourceData, meta interface{}) error {
-	BasePath := ""
-	InsecureFlag := true
-	namespaceConfig := GetNamespaceConfig(SessionID, BasePath, InsecureFlag)
+	APIClient := meta.(*VSphereClient).apiClient
+	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 
 	client := namespaces.NewAPIClient(namespaceConfig)
 	nameSpace := d.Get("namespace").(string)
 
 	ctx := context.WithValue(context.Background(), runtime.ContextAPIKey, runtime.APIKey{
-		Key:    SessionID,
+		Key:    APIClient.SessionID,
 		Prefix: "",
 	})
 
@@ -202,13 +184,11 @@ func resourceVsphereNamespaceUpdate(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceVsphereNamespaceDelete(d *schema.ResourceData, meta interface{}) error {
-	BasePath := ""
-	InsecureFlag := true
-
-	namespaceConfig := GetNamespaceConfig(SessionID, BasePath, InsecureFlag)
+	APIClient := meta.(*VSphereClient).apiClient
+	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 	nameSpace := d.Id()
 	ctx := context.WithValue(context.Background(), runtime.ContextAPIKey, runtime.APIKey{
-		Key:    SessionID,
+		Key:    APIClient.SessionID,
 		Prefix: "",
 	})
 
@@ -220,6 +200,17 @@ func resourceVsphereNamespaceDelete(d *schema.ResourceData, meta interface{}) er
 
 	d.SetId("")
 	return nil
+}
+
+func getNamespaceRuntimeConfig(sessionID string, basePath string, insecureFlag bool) *runtime.Configuration {
+	cfg := runtime.NewConfiguration()
+	cfg.BasePath = basePath
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureFlag},
+	}
+	cfg.HTTPClient = &http.Client{Transport: tr}
+	cfg.AddDefaultHeader("vmware-api-session-id", sessionID)
+	return cfg
 }
 
 func flattenAccessList(accessListInterface []interface{}) []namespaces.NamespacesInstancesAccess {

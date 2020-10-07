@@ -349,8 +349,6 @@ github.com/vmware/vsphere-automation-sdk-go v0.0.0-20200831100021-fd36e2e7bab8 h
 github.com/vmware/vsphere-automation-sdk-go/lib v0.3.1/go.mod h1:lzuoOgc7zhx3bfrKFRDBbaJX3wj4wSstWv4pTpryhJs=
 github.com/vmware/vsphere-automation-sdk-go/runtime v0.3.1 h1:AhoRilMJ6hZbBDr4J9GSrAVpPBkLlZz8+FS84Pdbhc8=
 github.com/vmware/vsphere-automation-sdk-go/runtime v0.3.1/go.mod h1:kYY+E5osoSMD814W25lc8SqHqSo32hbCZr4pFRA5VgA=
-github.com/vmware/vsphere-automation-sdk-go/services/vmc v0.4.0 h1:C2g1zOTcB2me5x4wvqILlg/p4pDhocEShVUlHihygsk=
-github.com/vmware/vsphere-automation-sdk-go/services/vmc v0.4.0/go.mod h1:JCGbR5OnX1g5Qw8eMQvE6XM8rEC5h388J/TLF8uHbtA=
 github.com/xanzy/ssh-agent v0.2.1/go.mod h1:mLlQY/MoOhWBj+gOGMQkOeiEvkx+8pJSI+0Bx9h2kr4=
 github.com/xiang90/probing v0.0.0-20160813154853-07dd2e8dfe18/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
 github.com/xlab/treeprint v0.0.0-20161029104018-1d6e34225557/go.mod h1:ce1O1j6UtZfjr22oyGxGLbauSBp2YVXpARAosm7dHBg=
@@ -364,10 +362,16 @@ github.com/zclconf/go-cty-yaml v1.0.1/go.mod h1:IP3Ylp0wQpYm50IHK8OZWKMu6sPJIUgK
 gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go v0.0.0-20200922004722-30a240dea7c9 h1:WsdAuf9YYBKm1PctGmo6rJ/VgNypHQva2PJfgYimlE8=
 gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/runtime v0.0.0-20200922004722-30a240dea7c9 h1:ilRJULtVv+/dzKDAt7q611LC1CfuPqWHdvjUad2PSmc=
 gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/runtime v0.0.0-20200922004722-30a240dea7c9/go.mod h1:GZ3jaLVDtjDHnk2GZHHQ7LBof1fI9IVSa4lnz9N7K0c=
+gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/runtime v0.0.0-20201005122232-b4f8930df357 h1:T6lRJVYYDbn4EKUCCv+fUqPzLkLNvndKyhLmRMM56rc=
+gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/runtime v0.0.0-20201005122232-b4f8930df357/go.mod h1:GZ3jaLVDtjDHnk2GZHHQ7LBof1fI9IVSa4lnz9N7K0c=
 gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/cis v0.0.0-20200922004722-30a240dea7c9 h1:NXhBnj7okurGOt6b3RPVOHPd8s8FNT96pKdgXGgKDdA=
 gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/cis v0.0.0-20200922004722-30a240dea7c9/go.mod h1:82B8PARyQgH0krubn3q2PKTYnNvFaYOCjoMUp0zxAeY=
+gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/cis v0.0.0-20201005122232-b4f8930df357 h1:qW5GB/iMC4soXQyw4FKvw+9Qke6qU4J+ieGiAxdmnSQ=
+gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/cis v0.0.0-20201005122232-b4f8930df357/go.mod h1:82B8PARyQgH0krubn3q2PKTYnNvFaYOCjoMUp0zxAeY=
 gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/vcenter/namespaces v0.0.0-20200922004722-30a240dea7c9 h1:fyhzNAlG9IHsmIXP8pdoeCqWUhzLO3+Gp82jriGV3fk=
 gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/vcenter/namespaces v0.0.0-20200922004722-30a240dea7c9/go.mod h1:wnP8RIn9KbxonLlNfjvV2eE3qtzsSraq+omXRIhiEn4=
+gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/vcenter/namespaces v0.0.0-20201005122232-b4f8930df357 h1:wuzByAOlaggYuqqWrDqn93DLWhe85Q1MybhO4fxzLWs=
+gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/vcenter/namespaces v0.0.0-20201005122232-b4f8930df357/go.mod h1:wnP8RIn9KbxonLlNfjvV2eE3qtzsSraq+omXRIhiEn4=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 go.opencensus.io v0.22.0 h1:C9hSCOW830chIVkdja34wa6Ky+IzWllkUinR+BtRZd4=
 go.opencensus.io v0.22.0/go.mod h1:+kGneAE2xo2IficOXnaByMWTGM9T73dGwxeWcUqIpI8=
@@ -441,6 +445,7 @@ golang.org/x/sys v0.0.0-20190606165138-5da285871e9c/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20190624142023-c5567b49c5d0/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa h1:KIDDMLT1O0Nr7TSxp8xM5tJcdn8tgyAONntO829og1M=
 golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd h1:xhmwyvizuTgC2qz7ZlMluP20uW+C3Rm0FD/WLDX8884=
 golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=

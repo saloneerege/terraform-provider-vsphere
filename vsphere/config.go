@@ -173,6 +173,10 @@ func (c *Config) Client() (*VSphereClient, error) {
 		if err != nil {
 			return nil, err
 		}
+		client.apiClient, err = c.ApiSessionClient()
+		if err != nil {
+			return nil, err
+		}
 	} else {
 		// Just print a log message so that we know that tags are not available on
 		// this connection.
@@ -577,7 +581,7 @@ func (c *Config) LoadAndVerifyRestSession(client *govmomi.Client) (*rest.Client,
 
 type APISessionClient struct {
 	ApiClient    *cis.APIClient
-	SessionId    string
+	SessionID    string
 	BasePath     string
 	InsecureFlag bool
 }
@@ -599,7 +603,7 @@ func (c *Config) ApiSessionClient() (*APISessionClient, error) {
 	sessionCreateResponseBody, _, err := apiClient.SessionApi.Create(ctx, "vmware-api-session-id")
 
 	if err != nil {
-		log.Printf("[DEBUG] %s:", err)
+		log.Printf("[DEBUG] error %v:", err)
 
 	} else {
 		log.Printf("[DEBUG] CIS session ID is : %s", sessionCreateResponseBody.Value)
@@ -608,7 +612,7 @@ func (c *Config) ApiSessionClient() (*APISessionClient, error) {
 	apiSessionClient := &APISessionClient{
 		// TODO - remove apiClient if not required for other cis apis like session, task management
 		ApiClient:    apiClient,
-		SessionId:    sessionCreateResponseBody.Value,
+		SessionID:    sessionCreateResponseBody.Value,
 		BasePath:     cfg.BasePath,
 		InsecureFlag: c.InsecureFlag,
 	}
