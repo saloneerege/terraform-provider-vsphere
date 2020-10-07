@@ -139,7 +139,7 @@ func resourceVsphereNamespaceRead(d *schema.ResourceData, meta interface{}) erro
 	APIClient := meta.(*VSphereClient).apiClient
 	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 
-	nameSpace := d.Get("namespace").(string)
+	nameSpace := d.Id()
 
 	ctx := context.WithValue(context.Background(), runtime.ContextAPIKey, runtime.APIKey{
 		Key:    APIClient.SessionID,
