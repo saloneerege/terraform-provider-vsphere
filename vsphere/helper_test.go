@@ -4,12 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/contentlibrary"
-	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/network"
-	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/spbm"
-	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/testhelper"
-	"github.com/vmware/govmomi/vapi/library"
-	"github.com/vmware/govmomi/vapi/rest"
 	"os"
 	"path"
 	"reflect"
@@ -17,6 +11,13 @@ import (
 	"strconv"
 	"testing"
 	"time"
+
+	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/contentlibrary"
+	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/network"
+	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/spbm"
+	"github.com/hashicorp/terraform-provider-vsphere/vsphere/internal/helper/testhelper"
+	"github.com/vmware/govmomi/vapi/library"
+	"github.com/vmware/govmomi/vapi/rest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -54,6 +55,9 @@ type testCheckVariables struct {
 	// REST client
 	restClient *rest.Client
 
+	// API Client
+	apiClient *APISessionClient
+
 	// The client for tagging operations.
 	tagsManager *tags.Manager
 
@@ -86,6 +90,7 @@ func testClientVariablesForResource(s *terraform.State, addr string) (testCheckV
 	return testCheckVariables{
 		client:             testAccProvider.Meta().(*VSphereClient).vimClient,
 		restClient:         testAccProvider.Meta().(*VSphereClient).restClient,
+		apiClient:          testAccProvider.Meta().(*VSphereClient).apiClient,
 		tagsManager:        tm,
 		resourceID:         rs.Primary.ID,
 		resourceAttributes: rs.Primary.Attributes,

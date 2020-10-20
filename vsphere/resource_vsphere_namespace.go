@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -46,7 +47,7 @@ func resourceVsphereNamespace() *schema.Resource {
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "Description for the namespace. If unset, no description is added to the namespace.",
 			},
 			"access_list": {
@@ -77,7 +78,8 @@ func resourceVsphereNamespace() *schema.Resource {
 						},
 					},
 				},
-				Optional: true,
+				Description: "Access controls associated with the namespace. If unset, only users with Administrator role can access the namespace.",
+				Optional:    true,
 			},
 			"storage_specifications": {
 				Type: schema.TypeList,
@@ -99,8 +101,14 @@ func resourceVsphereNamespace() *schema.Resource {
 				Optional:    true,
 			},
 			"configuration_status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Describes the status of configuration for the namespace. CONFIGURING : The configuration is being applied to the namespace. REMOVING : The configuration is being removed and namespace is being deleted. RUNNING : The namespace is configured correctly. ERROR : Failed to apply the configuration to the namespace, user intervention needed.",
+			},
+			"instance_stats": {
+				Type:        schema.TypeMap,
+				Computed:    true,
+				Description: "The basic runtime statistics about the namespace.",
 			},
 		},
 	}
@@ -108,7 +116,7 @@ func resourceVsphereNamespace() *schema.Resource {
 
 func resourceVsphereNamespaceCreate(d *schema.ResourceData, meta interface{}) error {
 	APIClient := meta.(*VSphereClient).apiClient
-	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
+	namespaceConfig := GetNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 
 	nameSpace := d.Get("namespace").(string)
 	clusterID := d.Get("cluster").(string)
@@ -137,7 +145,7 @@ func resourceVsphereNamespaceCreate(d *schema.ResourceData, meta interface{}) er
 func resourceVsphereNamespaceRead(d *schema.ResourceData, meta interface{}) error {
 
 	APIClient := meta.(*VSphereClient).apiClient
-	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
+	namespaceConfig := GetNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 
 	nameSpace := d.Id()
 
@@ -156,12 +164,19 @@ func resourceVsphereNamespaceRead(d *schema.ResourceData, meta interface{}) erro
 	d.Set("namespace", nameSpace)
 	d.Set("cluster", namespaceInfo.Cluster)
 	d.Set("description", namespaceInfo.Description)
+
+	instanceStats := map[string]int64{}
+	instanceStats["cpu_used"] = namespaceInfo.Stats.CpuUsed
+	instanceStats["memory_used"] = namespaceInfo.Stats.MemoryUsed
+	instanceStats["storage_used"] = namespaceInfo.Stats.StorageUsed
+	log.Printf("Instance Stats :%v", instanceStats)
+	d.Set("instance_stats", instanceStats)
 	return nil
 }
 
 func resourceVsphereNamespaceUpdate(d *schema.ResourceData, meta interface{}) error {
 	APIClient := meta.(*VSphereClient).apiClient
-	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
+	namespaceConfig := GetNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 
 	client := namespaces.NewAPIClient(namespaceConfig)
 	nameSpace := d.Get("namespace").(string)
@@ -185,7 +200,7 @@ func resourceVsphereNamespaceUpdate(d *schema.ResourceData, meta interface{}) er
 
 func resourceVsphereNamespaceDelete(d *schema.ResourceData, meta interface{}) error {
 	APIClient := meta.(*VSphereClient).apiClient
-	namespaceConfig := getNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
+	namespaceConfig := GetNamespaceRuntimeConfig(APIClient.SessionID, APIClient.BasePath, APIClient.InsecureFlag)
 	nameSpace := d.Id()
 	ctx := context.WithValue(context.Background(), runtime.ContextAPIKey, runtime.APIKey{
 		Key:    APIClient.SessionID,
@@ -202,7 +217,7 @@ func resourceVsphereNamespaceDelete(d *schema.ResourceData, meta interface{}) er
 	return nil
 }
 
-func getNamespaceRuntimeConfig(sessionID string, basePath string, insecureFlag bool) *runtime.Configuration {
+func GetNamespaceRuntimeConfig(sessionID string, basePath string, insecureFlag bool) *runtime.Configuration {
 	cfg := runtime.NewConfiguration()
 	cfg.BasePath = basePath
 	tr := &http.Transport{
