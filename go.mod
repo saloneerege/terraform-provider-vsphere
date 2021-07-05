@@ -13,5 +13,10 @@ require (
 	github.com/terraform-providers/terraform-provider-random v1.3.2-0.20190925210718-83518d96ae4f
 	github.com/terraform-providers/terraform-provider-template v1.0.0 // indirect
 	github.com/vmware/govmomi v0.22.2-0.20200523220130-61b30e20be49
+	github.com/vmware/vsphere-automation-sdk-go/services/vmc v0.4.0
+	gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/runtime v0.0.0-20201005122232-b4f8930df357
+	gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/cis v0.0.0-20201005122232-b4f8930df357
+	gitlab.eng.vmware.com/openapi-sdks/vmware-infrastructure-sdk-go/services/vsphere/vcenter/namespaces v0.0.0-20201005122232-b4f8930df357
 	google.golang.org/genproto v0.0.0-20200122232147-0452cf42e150 // indirect
+
 )

@@ -133,6 +133,7 @@ func Provider() terraform.ResourceProvider {
 			"vsphere_vm_storage_policy":                       resourceVmStoragePolicy(),
 			"vsphere_role":                                    resourceVsphereRole(),
 			"vsphere_entity_permissions":                      resourceVsphereEntityPermissions(),
+			"vsphere_namespace":                               resourceVsphereNamespace(),
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
